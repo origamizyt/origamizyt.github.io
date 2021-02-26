@@ -2,8 +2,92 @@
 <html>
   <head>
     <title>Toolbox</title>
+    <script src='https://cdn.staticfile.org/jquery/3.5.1/jquery.js'></script>
+    <script src='https://cdn.staticfile.org/popper.js/2.8.4/umd/popper.js'></script>
+    <script src='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/js/bootstrap.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/css/bootstrap.css'>
+    <link rel='stylesheet' href='assets/main.css'>
   </head>
-  <body>
-    <p>This is a test.</p>
+  <body class='bg-dark text-white text-center'>
+    <main class='container'>
+      <section class='main'>
+        <img src='assets/hammer.png' alt='tool' height="100">
+        <h1 class='big-title'>My Toolbox</h1>
+        <span>Tools anywhere, anytime.</span>
+      </section>
+      <hr>
+      <section class='d-flex flex-wrap'>
+        <div class='p-2 flex-fill half-card'>
+          <div class='card bg-secondary'>
+            <div class='card-header'>
+              <h5>Cryptography</h5>
+            </div>
+            <div class='card-body'>
+              <span>
+                Contents includes base64 encoding, hash algorithms,
+                symmetric and asymmetric encryptions and signatures.
+              </span><br>
+              <a href='/crypto' class='btn btn-outline-light mt-3'>Enter</a>
+            </div>
+          </div>
+        </div>
+        <div class='p-2 flex-fill half-card'>
+          <div class='card bg-secondary'>
+            <div class='card-header'>
+              <h5>Documents</h5>
+            </div>
+            <div class='card-body'>
+              <span>
+                Public space for my personal documents.
+                Free to download. Provides MD5 file integrity checks.
+              </span><br>
+              <a href='/space' class='btn btn-outline-light mt-3'>Enter</a>
+            </div>
+          </div>
+        </div>
+        <div class='p-2 flex-fill half-card'>
+          <div class='card bg-secondary'>
+            <div class='card-header'>
+              <h5>Coding</h5>
+            </div>
+            <div class='card-body'>
+              <span>
+                Code snippets of commonly used statements.
+                Just copy it into your interpreter and see.
+              </span><br>
+              <a href='/code' class='btn btn-outline-light mt-3'>Enter</a>
+            </div>
+          </div>
+        </div>
+        <div class='p-2 flex-fill half-card'>
+          <div class='card bg-secondary'>
+            <div class='card-header'>
+              <h5>Projects</h5>
+            </div>
+            <div class='card-body'>
+              <span>
+                Some utilities I wrote out of Python.
+                Feel free to use them. Or you can extend them as you like.
+              </span><br>
+              <a href='/project' class='btn btn-outline-light mt-3'>Enter</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class='footer bg-dark'>
+      <div class='container'>
+        <hr>
+        <div class='row mb-2'>
+          <div class='col-6 p-2'>
+            <a href='/about.html'>About</a>
+          </div>
+          <div class='col-6 p-2'>
+            <span>This site is mainteined by <a href='https://github.com/origamizyt'>origamizyt</a>.</span><br>
+            <span>Email: <a href='mailto:zhaoyitong18@163.com'>zhaoyitong18@163.com</a></span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

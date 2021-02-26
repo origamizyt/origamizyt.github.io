@@ -1,0 +1,33 @@
+body {
+    font-family: 'Nunito';
+}
+
+.big-title {
+    font-size: 50px;
+    font-family: 'Playfair Display';
+    font-weight: 800;
+}
+
+.main {
+    margin-top: 50px;
+}
+
+.footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+}
+
+.half-card {
+    max-width: 50%;
+}
+
+a {
+    color:aquamarine;
+}
+
+hr {
+    background-color: white;
+    height: 1px;
+    border: none;
+}
