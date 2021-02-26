@@ -1,10 +1,10 @@
 body {
-    font-family: 'Nunito';
+    font-family: 'body-font';
 }
 
 .big-title {
     font-size: 50px;
-    font-family: 'Playfair Display';
+    font-family: 'title-font';
     font-weight: 800;
 }
 
@@ -30,4 +30,23 @@ hr {
     background-color: white;
     height: 1px;
     border: none;
+}
+
+.shadow-hover {
+    box-shadow: 0 1px 2px rgba(255,255,255,.2);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 5px 15px rgba(255,255,255,.4);
+}
+
+@font-face {
+    font-family: "title-font";
+    src: url("PlayfairDisplay-Black.ttf");
+}
+
+@font-face {
+    font-family: "body-font";
+    src: url("Nunito-Regular.ttf");
 }
