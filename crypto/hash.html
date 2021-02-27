@@ -52,11 +52,11 @@
                 <input type="checkbox" class="form-check-input" id="base64" v-model='useBase64'>
                 <label class="form-check-label" for="base64">Base64 Input</label>
               </div>
-              <textarea v-model='input' class='form-control mt-1 mono' style='resize: none;' rows='19'></textarea>
+              <textarea v-model='input' class='form-control mt-1 mono' style='resize: none;' rows='19' spellcheck="false"></textarea>
             </div>
             <div class='col-6'>
               <span>Output Data:</span>
-              <textarea v-model='output' class='form-control my-2 mono' style='resize: none;' rows='20'></textarea>
+              <textarea v-model='output' class='form-control my-2 mono' style='resize: none;' rows='20' spellcheck="false"></textarea>
             </div>
           </div>
           <input type='submit' class='btn btn-outline-light mt-2' value='&gt; Do Hash &gt;'>
