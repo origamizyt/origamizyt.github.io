@@ -47,6 +47,10 @@ hr {
     box-shadow: 0 5px 15px rgba(255,255,255,.4);
 }
 
+.mono {
+    font-family: "mono-font";
+}
+
 @font-face {
     font-family: "title-font";
     src: url("PlayfairDisplay-Black.ttf");
@@ -55,4 +59,9 @@ hr {
 @font-face {
     font-family: "body-font";
     src: url("Nunito-Regular.ttf");
+}
+
+@font-face {
+    font-family: "mono-font";
+    src: url("iosevka-extended.ttf");
 }
