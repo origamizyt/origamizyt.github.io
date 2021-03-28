@@ -1,0 +1,9 @@
+[
+  {
+    "projectName": "24-points",
+    "description": "A program to solve the 24-points problem.",
+    "language": "Python",
+    "version": "1.0",
+    "webPathRoot": "24-points/"
+  }
+]

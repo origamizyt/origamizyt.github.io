@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project</title>
+    <script src='https://cdn.staticfile.org/jquery/3.5.1/jquery.js'></script>
+    <script src='https://cdn.staticfile.org/popper.js/2.8.4/umd/popper.js'></script>
+    <script src='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/js/bootstrap.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/css/bootstrap.css'>
+    <link rel='stylesheet' href='../assets/main.css'>
+  </head>
+  <body class='bg-dark text-white text-center'>
+    <header class='header text-left p-2'>
+      <a href='..'>
+        <img src='../assets/backarrow.png' alt='back' height='40'>
+      </a>
+    </header>
+    <main class='container'>
+      <section class='main'>
+        <h1 class='big-title'>Projects</h1>
+        <span>
+          Projects that solves daily life problems. Feel free to download them.
+        </span>
+      </section>
+      <hr>
+      <section>
+        <div class='mx-auto alert alert-warning' id='loading'>
+          <span class='spinner-border'></span><br>
+          Loading project index...<br>
+          Please wait for a while.
+        </div>
+        <div class='d-flex' id='project-list'>
+          <div class='card text-dark m-2 flex-fill'>
+            <div class='card-header'>
+              <h5 class='card-title mb-0'>Project: 24-point ver. 1.0</h5>
+            </div>
+            <div class='card-body'>
+              <span>A program to solve the 24-points problem.</span><br>
+              <span>Language: Python</span>
+            </div>
+            <div class='card-footer'>
+              <a href='24-points/'>View Details</a>
+            </div>
+          </div>
+          <div class='card text-dark m-2 flex-fill'>
+            <div class='card-header'>
+              <h5 class='card-title mb-0'>Project: 24-point ver. 1.0</h5>
+            </div>
+            <div class='card-body'>
+              <span>A program to solve the 24-points problem.</span><br>
+              <span>Language: Python</span>
+            </div>
+            <div class='card-footer'>
+              <a href='24-points/'>View Details</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class='footer bg-dark'>
+      <div class='container'>
+        <hr>
+        <div class='row mb-2'>
+          <div class='col-6 p-2'>
+            <a href='/about.html'>About</a>
+          </div>
+          <div class='col-6 p-2'>
+            <span>This site is mainteined by <a href='https://github.com/origamizyt'>origamizyt</a>.</span><br>
+            <span>Email: <a href='mailto:zhaoyitong18@163.com'>zhaoyitong18@163.com</a></span>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      let projects = [];
+      function toggleLoading(show) {
+        if (show) $("#loading").show();
+        else $("#loading").hide();
+      }
+      function updateProjects(){
+        let list = document.getElementById("project-list");
+        list.innerHTML = "";
+        for (let p of projects){
+          let div = document.createElement("div");
+          div.className = "card text-dark m-2 flex-fill";
+          let header = document.createElement("div");
+          header.className = "card-header";
+          let title = document.createElement("h5");
+          title.className = "card-title mb-0";
+          title.textContent = `Project: ${p.projectName} ver. ${p.version}`;
+          header.appendChild(title);
+          div.appendChild(header);
+          let body = document.createElement("div");
+          body.className = "card-body";
+          let desc = document.createElement("span");
+          desc.textContent = p.description;
+          body.appendChild(desc);
+          body.appendChild(document.createElement("br"));
+          let lang = document.createElement("span");
+          lang.textContent = `Language: ${p.language}`;
+          body.appendChild(lang);
+          div.appendChild(body);
+          let footer = document.createElement("div");
+          footer.className = "card-footer";
+          let link = document.createElement("a");
+          link.href = p.webPathRoot;
+          link.textContent = "View Details";
+          footer.appendChild(link);
+          div.appendChild(footer);
+          list.appendChild(div);
+        }
+      }
+      $(() => {
+        toggleLoading(true);
+        $.ajax("index.json", {
+          method: 'GET',
+          success(data) {
+            toggleLoading(false);
+            projects = data;
+            updateProjects();
+          }
+        })
+      });
+    </script>
+  </body>
+</html>

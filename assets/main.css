@@ -32,6 +32,10 @@ a {
     color:aquamarine;
 }
 
+.card-footer a {
+    color: slateblue;
+}
+
 hr {
     background-color: white;
     height: 1px;
