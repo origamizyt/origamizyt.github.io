@@ -3,13 +3,13 @@
     "projectName": "Turtle Inspector",
     "description": "Tester for drawing module 'turtle'.",
     "language": "Python",
-    "version": "v1.0 (stable)",
+    "version": "v1.0.1 (stable)",
     "projectUrls": {
       "Repository": "https://github.com/origamizyt/TurtleInspector",
       "Download": "https://github.com/origamizyt/TurtleInspector/releases/download/v1.0/Setup.msi"
     },
     "integrity": {
-      "Setup.msi": "0cceb4e3184967878387e43d7c1bb4e9"
+      "Setup.msi": "88fdfc2234baee5cf1d10e012b481438"
     }
   }
 ]
