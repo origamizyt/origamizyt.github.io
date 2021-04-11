@@ -10,7 +10,7 @@ this.tools = {};
             let parts = item.split("=");
             let name = parts[0];
             let value = parts[1];
-            result[name] = value;
+            result[name] = decodeURIComponent(value);
         });
         return result;
     }
