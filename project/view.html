@@ -32,23 +32,17 @@
           Please go back for more projects available.
         </div>
         <div id='info' style='display: none;'>
-          <span id='desc'>Description: Tester for drawing module 'turtle'.</span><br>
-          <span id='version'>Version: v1.0 (stable)</span>
+          <span id='desc'></span><br>
+          <span id='version'></span>
           <div class='row mt-3'>
             <div class='col-6'>
               <span>Project URLs:</span>
               <ul class='list-group mt-3' id='urls'>
-                <li class='list-group-item bg-secondary'><a href='https://github.com/origamizyt/TurtleInspector'>Repository</a></li>
-                <li class='list-group-item bg-secondary'><a href='https://github.com/origamizyt/TurtleInspector/releases/download/v1.0/Setup.msi'>Download</a></li>
               </ul>
             </div>
             <div class='col-6'>
               <span>MD5 Hashes:</span>
               <ul class='list-group mt-3' id='hashes'>
-                <li class='list-group-item bg-secondary'>
-                  <span>Setup.msi: 0cceb4e3184967878387e43d7c1bb4e9</span><br>
-                  <code class='mono'>CertUtil -hashfile Setup.msi MD5</code>
-                </li>
               </ul>
             </div>
           </div>
@@ -100,8 +94,8 @@
         })
       });
       function updateProject(){
-        $("#name").text(project.projectName);
-        $("#desc").text(project.description);
+        $("#name").text("Description: " + project.projectName);
+        $("#desc").text("Version: " + project.description);
         $("#version").text(project.version);
         for (let alias in project.projectUrls){
           let url = project.projectUrls[alias];
