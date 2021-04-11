@@ -94,9 +94,9 @@
         })
       });
       function updateProject(){
-        $("#name").text("Description: " + project.projectName);
-        $("#desc").text("Version: " + project.description);
-        $("#version").text(project.version);
+        $("#name").text(project.projectName);
+        $("#desc").text("Description: " + project.description);
+        $("#version").text("Version: " + project.version);
         for (let alias in project.projectUrls){
           let url = project.projectUrls[alias];
           let li = document.createElement("li");
