@@ -78,7 +78,7 @@
           let footer = document.createElement("div");
           footer.className = "card-footer";
           let link = document.createElement("a");
-          link.href = p.webPathRoot;
+          link.href = `view.html?name=${p.projectName}`;
           link.textContent = "View Details";
           footer.appendChild(link);
           div.appendChild(footer);
