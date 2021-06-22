@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+  <head>
+    <title>About</title>
+    <script src='https://cdn.staticfile.org/vue/2.6.14/vue.js'></script>
+    <script src='https://cdn.staticfile.org/element-ui/2.15.2/index.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/element-ui/2.15.2/theme-chalk/index.css'>
+    <link rel='stylesheet' href='assets/main.css'>
+    <style>
+      .el-main .el-link {
+        font-size: 1rem;
+        margin-top: -5px;
+      }
+    </style>
+  </head>
+  <body>
+    <el-container id='app'>
+      <el-header>
+        <el-page-header content='About 关于此网站' @back='back'></el-page-header>
+      </el-header>
+      <el-main>
+        <h3>页面</h3>
+        <p>Page Powered By <el-link href='https://cn.vuejs.org' type='primary'>Vue.js</el-link> &amp;
+          <el-link href='https://element.eleme.cn' type='primary'>ElementUI</el-link> <i class='el-icon-eleme'></i></p>
+        <p>Free Web Hosting By <el-link href='https://pages.github.com/' type='primary'>GitHub Pages</el-link></p>
+        <h3>开发者</h3>
+        <p>This site is maintained by <el-link href='https://github.com/origamizyt' type='primary'>origamizyt</el-link></p>
+        <el-divider></el-divider>
+        <p>Copyright 2021&copy; origamizyt, all rights reserved.</p>
+      </el-main>
+      <el-footer height='100px'>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span='12'>
+            <el-link type='primary' href='#'>关于此网站</el-link>
+          </el-col>
+          <el-col :span='12'>
+            <el-link type='primary' href='mailto:zhaoyitong18@163.com'>Email 联系开发者</el-link>
+          </el-col>
+        </el-row>
+      </el-footer>
+    </el-container>
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+        },
+        methods: {
+          back() {
+            location = '/';
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
