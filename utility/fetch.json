@@ -5,6 +5,7 @@
     "resourceName": "AlkaneStructuralIsomerCalculator",
     "displayName": "烷烃同分异构体数目计算器",
     "description": "计算烷烃同分异构体数目的在线工具。",
-    "location": "alkane.html"
+    "location": "alkane.html",
+    "timestamp": 1624369700900
   }
 ]
