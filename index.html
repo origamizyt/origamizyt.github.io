@@ -1,93 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang='zh-CN'>
   <head>
     <title>Toolbox</title>
-    <script src='https://cdn.staticfile.org/jquery/3.5.1/jquery.js'></script>
-    <script src='https://cdn.staticfile.org/popper.js/2.8.4/umd/popper.js'></script>
-    <script src='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/js/bootstrap.js'></script>
-    <link rel='stylesheet' href='https://cdn.staticfile.org/twitter-bootstrap/4.6.0/css/bootstrap.css'>
+    <script src='https://cdn.staticfile.org/vue/2.6.14/vue.js'></script>
+    <script src='https://cdn.staticfile.org/element-ui/2.15.2/index.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/element-ui/2.15.2/theme-chalk/index.css'>
     <link rel='stylesheet' href='assets/main.css'>
   </head>
-  <body class='bg-dark text-white text-center'>
-    <main class='container'>
-      <section class='main'>
-        <img src='assets/hammer.png' alt='tool' height="100">
-        <h1 class='big-title'>My Toolbox</h1>
-        <span>Tools anywhere, anytime.</span>
-      </section>
-      <hr>
-      <section class='d-flex flex-wrap'>
-        <div class='p-2 flex-fill half-card'>
-          <div class='card bg-secondary shadow-hover'>
-            <div class='card-header'>
-              <h5>Cryptography</h5>
-            </div>
-            <div class='card-body'>
-              <span>
-                Contents includes base64 encoding, hash algorithms,
-                symmetric and asymmetric encryptions and signatures.
+  <body>
+    <el-container id='app'>
+      <el-header>
+        <el-menu default-active="/" mode="horizontal" @select="navigate"
+        background-color="#606266"
+        text-color="#C0C4CC"
+        active-text-color="#67C23A">
+          <el-menu-item index="/">主页</el-menu-item>
+          <el-menu-item index="/crypto">加密</el-menu-item>
+          <el-menu-item index="/utility">工具</el-menu-item>
+          <el-menu-item index="/project">项目</el-menu-item>
+        </el-menu>
+      </el-header>
+      <el-main>
+        <h1>My Toolbox</h1>
+        <p class='no-top'>Whenever, Wherever.</p>
+        <el-divider></el-divider>
+        <el-row :gutter='10'>
+          <el-col :span='8'>
+            <el-card shadow='hover'>
+              <div slot="header">
+                Cryptography 加密
+              </div>
+              <span class='small-text'>
+              此板块提供了一些在线执行哈希、密码导出、对称与非对称加密的公共接口，并提供 Base64 编码服务。
               </span><br>
-              <a href='/crypto' class='btn btn-outline-light mt-3'>Enter</a>
-            </div>
-          </div>
-        </div>
-        <div class='p-2 flex-fill half-card'>
-          <div class='card bg-secondary shadow-hover'>
-            <div class='card-header'>
-              <h5>Documents</h5>
-            </div>
-            <div class='card-body'>
-              <span>
-                Public space for my personal documents.
-                Free to download. Provides MD5 file integrity checks.
+              <el-link type='primary' href='/crypto' class='mg-top'>进入板块</el-link>
+            </el-card>
+          </el-col>
+          <el-col :span='8'>
+            <el-card shadow='hover'>
+              <div slot="header">
+                Utility 实用工具
+              </div>
+              <span class='small-text'>
+              此板块提供一些常用的运算或查询工具。这些工具有物理、化学或生物方面的，也有网络查询如 DNS。
               </span><br>
-              <a href='/space' class='btn btn-outline-light mt-3'>Enter</a>
-            </div>
-          </div>
-        </div>
-        <div class='p-2 flex-fill half-card'>
-          <div class='card bg-secondary shadow-hover'>
-            <div class='card-header'>
-              <h5>Coding</h5>
-            </div>
-            <div class='card-body'>
-              <span>
-                Code snippets of commonly used statements.
-                Just copy it into your interpreter and see.
+              <el-link type='primary' href='/utility' class='mg-top'>进入板块</el-link>
+            </el-card>
+          </el-col>
+          <el-col :span='8'>
+            <el-card shadow='hover'>
+              <div slot="header">
+                Project 项目
+              </div>
+              <span class='small-text'>
+              此板块提供了一些个人研发的项目信息，它们的用途、GitHub 代码库、文件 MD5 哈希以及下载地址。
               </span><br>
-              <a href='/code' class='btn btn-outline-light mt-3'>Enter</a>
-            </div>
-          </div>
-        </div>
-        <div class='p-2 flex-fill half-card'>
-          <div class='card bg-secondary shadow-hover'>
-            <div class='card-header'>
-              <h5>Projects</h5>
-            </div>
-            <div class='card-body'>
-              <span>
-                Some utilities I wrote out of Python.
-                Feel free to use them. Or you can extend them as you like.
-              </span><br>
-              <a href='/project' class='btn btn-outline-light mt-3'>Enter</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer class='footer bg-dark'>
-      <div class='container'>
-        <hr>
-        <div class='row mb-2'>
-          <div class='col-6 p-2'>
-            <a href='/about.html'>About</a>
-          </div>
-          <div class='col-6 p-2'>
-            <span>This site is mainteined by <a href='https://github.com/origamizyt'>origamizyt</a>.</span><br>
-            <span>Email: <a href='mailto:zhaoyitong18@163.com'>zhaoyitong18@163.com</a></span>
-          </div>
-        </div>
-      </div>
-    </footer>
+              <el-link type='primary' href='/project' class='mg-top'>进入板块</el-link>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-main>
+      <el-footer height='100px'>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span='12'>
+            <el-link type='primary' href='/about.html'>关于此网站</el-link>
+          </el-col>
+          <el-col :span='12'>
+            <el-link type='primary' href='mailto:zhaoyitong18@163.com'>Email 联系开发者</el-link>
+          </el-col>
+        </el-row>
+      </el-footer>
+    </el-container>
+    <script>
+      const app = new Vue({
+        el: '#app',
+        methods: {
+          navigate(path) {
+            location = path;
+          }
+        }
+      })
+    </script>
   </body>
 </html>

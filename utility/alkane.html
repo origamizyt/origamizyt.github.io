@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+  <head>
+    <title>Alkane Calculator</title>
+    <script src='https://cdn.staticfile.org/vue/2.6.14/vue.js'></script>
+    <script src='https://cdn.staticfile.org/element-ui/2.15.2/index.js'></script>
+    <script src='../assets/resource.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/element-ui/2.15.2/theme-chalk/index.css'>
+    <link rel='stylesheet' href='../assets/main.css'>
+    <style>
+      .large-text {
+        font-size: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <el-container id='app'>
+      <el-header>
+        <el-page-header content='Alkane Structural Isomer Calculator 烷烃同分异构体数目计算器' @back='back'></el-page-header>
+      </el-header>
+      <el-main>
+        <el-form :inline='true' :model='form' @submit='calculate' @submit.native.prevent>
+          <el-form-item label='碳原子数目'>
+            <el-input-number v-model='form.carbonAmount' :min='1'
+            @change='clear'></el-input-number>
+          </el-form-item>
+          <el-form-item>
+            <el-button type='primary' round :loading='calculating' @click='calculate'>计算</el-button>
+          </el-form-item>
+        </el-form>
+        <el-alert title='性能问题' description='由于性能问题，本工具只能计算碳数为 700 以下的烷烃分子，且碳数为 40 以上时计算结果不精确。若要准确计算，请使用项目中的 Python 代码。'
+        type='warning' :closable='false' style='text-align: left;'></el-alert>
+        <el-divider></el-divider>
+        <p class='small-text'>名称为</p>
+        <p class='large-text'>{{alkaneName}} (<span v-html='alkaneSymbol'></span>)</p>
+        <p class='small-text'>的烷烃同分异构体数目{{form.carbonAmount > 40 ? '大约': ''}}为</p>
+        <div class='large-text' style='word-wrap: break-word;'>{{result}}</div>
+      </el-main>
+      <el-footer height='100px'>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span='12'>
+            <el-link type='primary' href='/about.html'>关于此网站</el-link>
+          </el-col>
+          <el-col :span='12'>
+            <el-link type='primary' href='mailto:zhaoyitong18@163.com'>Email 联系开发者</el-link>
+          </el-col>
+        </el-row>
+      </el-footer>
+    </el-container>
+    <script>
+      function C(n, k) {
+        let ret = 1;
+        for (let i = 0; i < k; i++) ret *= (n - i);
+        for (let i = 1; i <= k; i++) ret /= i;
+        return ret;
+      }
+      function sum(a) {
+        return a.reduce((x, y) => x + y);
+      }
+      async function calculateIsomer(n, m){
+        return new Promise(resolve => {
+          m = m || 4;
+          let dp = [];
+          for (let i = 0; i <= n; i++) dp.push(new Array(m+1).fill(0));
+          dp[1][0] = 1;
+          for (let size = 1; size <= Math.floor((n - 1) / 2); size++) {
+            let s = sum(dp[size].slice(0, -1));
+            for (let i = n; i > size; i--)
+              for (let j = 1; j <= m; j++)
+                for (let k = 1; k <= j; k++)
+                  if (size * k < i)
+                    dp[i][j] += dp[i - size*k][j-k] * C(s+k-1, k)
+          }
+          ret = sum(dp[n])
+          if (!(n%2))
+            ret += C(sum(dp[Math.floor(n/2)].slice(0, -1)) + 1, 2)
+          resolve(ret);
+        });
+      }
+      const special = '甲乙丙丁戊己庚辛壬癸'.split('');
+      function formatNumber(num) {
+        if (num <= 10) return special[num-1];
+        let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九']; 
+        let unit = ["", "十", "百", "千", "万"];
+        num = parseInt(num);
+        let getWan = (temp) => {
+          let strArr = temp.toString().split("").reverse();
+          let newNum = "";
+          for (var i = 0; i < strArr.length; i++) {
+            newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+          }
+          return newNum;
+        }
+        let overWan = Math.floor(num / 10000);
+        let noWan = num % 10000;
+        if (noWan.toString().length < 4) {
+          noWan = "0" + noWan;
+        }
+        return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
+      }
+      function formatAlkane(n) {
+        return formatNumber(n) + '烷';
+      }
+      const app = new Vue({
+        el: '#app',
+        data: {
+          form: {
+            carbonAmount: 1
+          },
+          calculating: false,
+          result: '待计算'
+        },
+        methods: {
+          back() {
+            location = '/utility';
+          },
+          calculate() {
+            this.calculating = true;
+            calculateIsomer(this.form.carbonAmount).then(value => {
+              this.calculating = false;
+              if (isNaN(value)) this.result = '溢出';
+              else this.result = value.toLocaleString() + ' (' + value.toExponential(2) + ')';
+            });
+          },
+          clear() {
+            this.result = '待计算';
+          }
+        },
+        computed: {
+          alkaneName() {
+            return formatAlkane(this.form.carbonAmount);
+          },
+          alkaneSymbol() {
+            if (this.form.carbonAmount === 1)
+              return 'CH<sub>4</sub>';
+            return `C<sub>${this.form.carbonAmount}</sub>H<sub>${this.form.carbonAmount * 2 + 2}</sub>`;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

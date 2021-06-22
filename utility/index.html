@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+  <head>
+    <title>Utility</title>
+    <script src='https://cdn.staticfile.org/vue/2.6.14/vue.js'></script>
+    <script src='https://cdn.staticfile.org/element-ui/2.15.2/index.js'></script>
+    <script src='../assets/resource.js'></script>
+    <link rel='stylesheet' href='https://cdn.staticfile.org/element-ui/2.15.2/theme-chalk/index.css'>
+    <link rel='stylesheet' href='../assets/main.css'>
+  </head>
+  <body>
+    <el-container id='app'>
+      <el-header>
+        <el-page-header content='Utility 实用工具' @back='back'></el-page-header>
+      </el-header>
+      <el-main>
+        <el-row :gutter='20'>
+          <el-col :span='6'>
+            <h3>搜索工具</h3>
+            <form @submit='commitCriteria'>
+              <label for='criteriaName'>Utility Name 工具名称</label>
+              <el-input type='text' v-model='criteriaName'
+              id='criteriaName' class='mg-sm-bottom'></el-input>
+              <label for='criteriaId'>Utility Id 工具标识符</label>
+              <el-input type='text' v-model='criteriaId'
+              id='criteriaId' class='mg-sm-bottom'></el-input>
+              <el-radio v-model="criteriaSort" label="sortByTime">按时间排序</el-radio>
+              <el-radio v-model="criteriaSort" label="sortByName">按名称排序</el-radio>
+              <el-switch v-model="criteriaCaseSensitive"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text='大小写敏感' class='mg-sm-top'></el-switch><br>
+              <el-row type='flex' justify='space-around' class='mg-lg-top'>
+                <el-col :span='8'><el-button type="success" icon="el-icon-check" round native-type='submit'>提交</el-button></el-col>
+                <el-col :span='8'><el-button type="danger" icon="el-icon-close" round @click='clearCriteria'>清空</el-button></el-col>
+              </el-row>
+            </form>
+          </el-col>
+          <el-col :span='18' class='flex-layout'>
+            <el-card v-for='x in filteredResources' :key='x.resourceId' class="resource" shadow='hover'>
+              <div slot="header">
+                <span>{{x.displayName}}</span>
+              </div>
+              <div class='small-text'>
+                <span>工具 ID: {{x.resourceId}}</span><br>
+                <span>工具名称: {{x.resourceName}}</span><br>
+                <span>描述: {{x.description}}</span><br>
+                <span>上传时间: {{timeOf(x.timestamp)}}</span><br>
+                <el-button type="info" icon="el-icon-info" circle class='mg-sm-top' @click='displayIdDetails(x)'></el-button>
+                <el-button type="primary" icon="el-icon-arrow-right" circle class='mg-sm-top' @click='x.navigate()'></el-button>
+              </div>
+            </el-card>
+            <el-alert close-text='清空条件' title='没有符合条件的项目' type='warning' v-if='!hasResources' style='text-align: left;'
+            @close='clearCriteria' show-icon description='在所有资源中，没有找到符合搜索条件的项目，请尝试更改条件或清空条件'></el-alert>
+          </el-col>
+        </el-row>
+        <el-dialog
+          title="Utility Id 工具标识符"
+          :visible.sync="idDialogVisible"
+          width="500px">
+          <p>明文 ID: <code>{{dialogItem.resourceId}}</code></p>
+          <p>哈希密文 ID (Scrypt+Base64): <code>{{dialogItem.secureResourceId}}</code></p>
+          <el-button @click='idDialogVisible = false' icon='el-icon-close' type='danger' circle></el-button>
+        </el-dialog>
+      </el-main>
+      <el-footer height='100px'>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span='12'>
+            <el-link type='primary' href='/about.html'>关于此网站</el-link>
+          </el-col>
+          <el-col :span='12'>
+            <el-link type='primary' href='mailto:zhaoyitong18@163.com'>Email 联系开发者</el-link>
+          </el-col>
+        </el-row>
+      </el-footer>
+    </el-container>
+    <script>
+      function compare(a, b) {
+        if (a > b) return 1;
+        if (a < b) return -1;
+        return 0;
+      }
+      function timeSort(a, b) {
+        return -compare(a.timestamp, b.timestamp);
+      }
+      function nameSort(a, b) {
+        return compare(a.resourceName, b.resourceName);
+      }
+      function contains(s1, s2, cs) {
+        if (!cs) {
+          s1 = s1.toLowerCase();
+          s2 = s2.toLowerCase();
+        }
+        return s1.includes(s2);
+      }
+      const app = new Vue({
+        el: '#app',
+        data: {
+          resourceReady: false,
+          resources: [],
+          filteredResources: [],
+          criteriaName: "",
+          criteriaId: "",
+          criteriaSort: "sortByTime",
+          criteriaCaseSensitive: false,
+          idDialogVisible: false,
+          dialogItem: {}
+        },
+        methods: {
+          back() {
+            location = '/';
+          },
+          commitCriteria(e){
+            e.preventDefault();
+            if (this.criteriaName)
+              this.filteredResources = this.resources.filter(x => contains(x.resourceName, this.criteriaName, this.criteriaCaseSensitive));
+            if (this.criteriaId)
+              this.filteredResources = this.resources.filter(x => x.resourceId == this.criteriaId);
+            if (this.criteriaSort === 'sortByTime')
+              this.filteredResources = this.filteredResources.sort(timeSort);
+            else
+              this.filteredResources = this.filteredResources.sort(nameSort);
+          },
+          clearCriteria() {
+            this.criteriaName = this.criteriaId = "";
+            this.criteriaSort = "sortByTime";
+            this.criteriaCaseSensitive = false;
+            this.filteredResources = this.resources.sort(timeSort);
+          },
+          timeOf(t) {
+            return new Date(t).toLocaleString();
+          },
+          displayIdDetails(x) {
+            this.dialogItem = x;
+            this.idDialogVisible = true;
+          }
+        },
+        created() {
+          const handle = this.$loading({ lock: true, text: "正在加载数据..." });
+          resource.fetch().then(data => {
+            this.resources = data;
+            this.filteredResources = data.sort(timeSort);
+            this.resourceReady = true;
+            handle.close();
+          });
+        },
+        computed: {
+          hasResources() {
+            return this.filteredResources.length > 0;
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

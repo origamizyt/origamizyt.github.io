@@ -1,0 +1,101 @@
+@font-face {
+    font-family: "body-font";
+    src: url("body.ttf");
+}
+
+@font-face {
+    font-family: "title-font";
+    src: url("title.ttf");
+}
+
+@font-face {
+    font-family: "mono-font";
+    src: url("mono.ttf");
+}
+
+* {
+    font-family: 'body-font', 'Microsoft YaHei UI', sans-serif;
+}
+
+h1 {
+    font-family: 'title-font', 'Microsoft YaHei UI', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+code, pre {
+    font-family: 'mono-font', monospace;
+}
+
+.el-main {
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 70px;
+}
+
+.el-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+}
+
+.el-page-header {
+    margin-top: 15px;
+}
+
+.no-top {
+    margin-top: 0px;
+}
+
+.small-text {
+    font-size: 14px;
+}
+
+.mg-top {
+    margin-top: 16px;
+}
+
+.mg-sm-bottom {
+    margin-bottom: 10px;
+}
+
+.mg-lg-bottom {
+    margin-bottom: 20px;
+}
+
+.mg-sm-top {
+    margin-top: 10px;
+}
+
+.mg-lg-top {
+    margin-top: 20px;
+}
+
+.flex-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.flex-layout > * {
+    flex-grow: 1;
+}
+
+.resource {
+    max-width: 48%;
+    margin: 5px;
+}
+
+form {
+    text-align: left;
+}
+
+label {
+    font-size: 12px;
+    color: #909399;
+}
