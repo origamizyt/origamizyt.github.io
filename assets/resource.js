@@ -71,6 +71,6 @@ a list of resources.
     async function _fetch() {
         return await fetch('fetch.json')
             .then(response => response.json())
-            .then(json => root.Resource.fromJson(json));
+            .then(json => json.map(obj => root.Resource.fromJson(obj)));
     }
 })(window.resource = {});
