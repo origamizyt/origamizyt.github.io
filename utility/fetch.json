@@ -7,5 +7,14 @@
     "description": "计算烷烃同分异构体数目的在线工具。",
     "location": "alkane.html",
     "timestamp": 1624369700900
+  },
+  {
+    "resourceId": "1597e0be-cf93-524e-b9a3-c9dcfb9cb2be",
+    "secureResourceId": "nhbqiISg2Q+TEMUZz1QwQJAvH6jETnojcZGr89VGjj07YaTOXbbPNYxOtt3dedo5hFjsmijSAZhQYYh5aJU//X/Lw8Atn7brJ7dT7VWKhYY=",
+    "resourceName": "DNASequenceViewer",
+    "displayName": "脱氧核糖核酸序列查看器",
+    "description": "查看 FASTA-DNA 序列文件的在线工具。",
+    "location": "dna.html",
+    "timestamp": 1624615741557
   }
 ]

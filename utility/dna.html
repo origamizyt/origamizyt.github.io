@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+  <title>DNA Viewer</title>
+  <script src='https://cdn.staticfile.org/vue/2.6.14/vue.js'></script>
+  <script src='https://cdn.staticfile.org/element-ui/2.15.2/index.js'></script>
+  <link rel='stylesheet' href='https://cdn.staticfile.org/element-ui/2.15.2/theme-chalk/index.css'>
+  <link rel='stylesheet' href='../assets/main.css'>
+  <style>
+    .dna {
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dna-section {
+      position: relative;
+      max-width: 200px;
+      height: 40px;
+      display: inline-block;
+    }
+
+    .dna-section .node-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 100%;
+      background: #409EFF;
+      animation: 6s topNode ease-in-out infinite;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    @keyframes topNode {
+      0% {
+        transform: scale(0.5);
+        left: 0;
+        z-index: 1;
+        opacity: 0.75;
+      }
+      25% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(0.5);
+        left: 170px;
+        z-index: 0;
+        opacity: 0.75;
+      }
+      75% {
+        transform: scale(0.25);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(0.5);
+        left: 0;
+        opacity: 0.75;
+      }
+    }
+
+    .dna-section .node-bottom {
+      position: absolute;
+      top: 0;
+      left: 170px;
+      bottom: 0;
+      width: 30px;
+      height: 30px;
+      background: #67C23A;
+      border-radius: 100%;
+      animation: 6s bottomNode ease-in-out infinite;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    @keyframes bottomNode {
+      0% {
+        transform: scale(0.5);
+        left: 170px;
+        opacity: 0.75;
+      }
+      25% {
+        transform: scale(0.25);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(0.5);
+        left: 0;
+        opacity: 0.75;
+      }
+      75% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.5);
+        left: 170px;
+        opacity: 0.75;
+      }
+    }
+
+    .dna-section .node-slash {
+      position: absolute;
+      top: 15px;
+      left: 40px;
+      width: 120px;
+      height: 2px;
+      background-color: #C0C4CC;
+      border-radius: 100%;
+      animation: 3s nodeSlash ease-in-out infinite;
+    }
+
+    @keyframes nodeSlash {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <el-container id='app'>
+    <el-header>
+      <el-page-header content='DNA Sequence Viewer 脱氧核糖核酸序列查看器' @back='back'></el-page-header>
+    </el-header>
+    <el-main>
+      <el-row :gutter='20'>
+        <el-col :span='8'>
+          <div class='dna'>
+            <div v-for='dna in (length)' class='dna-section'>
+              <div class='node-top' :style='animationDelayOf(dna)'>{{bases[dna-1][0]}}</div>
+              <div class='node-slash' :style='animationDelayOf(dna)'></div>
+              <div class='node-bottom' :style='animationDelayOf(dna)'>{{bases[dna-1][1]}}</div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span='16'>
+          <div v-if='!loaded'>
+            <h3>加载序列文件</h3>
+            <el-button type='primary' plain @click='uploadSequence' :loading='percentage !== 0'>上传文件</el-button>
+            <el-progress :percentage='percentage' class='mg-sm-top' style='width: 50%; margin-left: auto; margin-right: auto;'></el-progress>
+          </div>
+          <div v-if='loaded'>
+            <h3>序列文件信息</h3>
+            <div style='text-align: left'>
+              <p>序列标识符: {{dna.id}}</p>
+              <p>序列名称: {{dna.name}}</p>
+              <p>序列长度 (以碱基计): {{dna.total}}</p>
+              <p>
+                碱基个数: <code>A={{dna.basesCount.a}}, T={{dna.basesCount.t}},
+                C={{dna.basesCount.c}}, G={{dna.basesCount.g}}, U={{dna.basesCount.u}}</code>
+              </p>
+              <p>C/G 比: {{(dna.cgRatio * 100).toPrecision(4)}}%</p>
+              <p>蛋白质数量: {{dna.proteinsCount}}</p>
+            </div>
+          </div>
+          <div id='igv-div' class='mg-sm-top' :style='{ display: loaded ? "block" : "none" }'>
+            
+          </div>
+        </el-col>
+      </el-row>
+    </el-main>
+    <el-footer height='100px'>
+      <el-divider></el-divider>
+      <el-row>
+        <el-col :span='12'>
+          <el-link type='primary' href='/about.html'>关于此网站</el-link>
+        </el-col>
+        <el-col :span='12'>
+          <el-link type='primary' href='mailto:zhaoyitong18@163.com'>Email 联系开发者</el-link>
+        </el-col>
+      </el-row>
+    </el-footer>
+  </el-container>
+  <script>
+    const DNALEN = 12;
+    function count(s, c) {
+      let charCount = 0;
+      for (let i = 0; i < s.length; i++) {
+        if (s[i] === c) charCount++;
+      }
+      return charCount;
+    }
+    class DNAData {
+      constructor() {
+        this.cgRatio = 0;
+        this.proteinsCount = 0;
+        this.cgCount = 0;
+        this.total = 0;
+        this._first = true;
+        this.id = "";
+        this.name = "";
+        this.basesCount = {
+          a: 0, t: 0, c: 0, g: 0, u: 0
+        }
+      }
+      feed(data) {
+        if (this._first) {
+          this._first = false;
+          let line = data.split('\n')[0].substr(1);
+          data = data.split('\n').slice(1).join(' ');
+          this.id = line.split(' ')[0];
+          this.name = line.split(' ').slice(1).join(' ');
+        }
+        this.total += data.length;
+        for (let base in this.basesCount)
+          this.basesCount[base] += count(data, base.toUpperCase());
+      }
+      finish() {
+        this.cgRatio = (this.basesCount.c + this.basesCount.g) / this.total;
+        this.proteinsCount = Math.floor(this.total / 3);
+      }
+    }
+    function getRandomBases(n) {
+      let result = [];
+      for (let i = 0; i < n; i++) {
+        let r = Math.floor(Math.random() * 4);
+        result.push(['AT', 'TA', 'CG', 'GC'][r]);
+      }
+      return result;
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        length: DNALEN,
+        bases: getRandomBases(DNALEN),
+        loaded: false,
+        percentage: 0,
+        location: 0,
+        totalChunk: 0,
+        dna: null
+      },
+      methods: {
+        back() {
+          location = '/utility';
+        },
+        animationDelayOf(x) {
+          return { animationDelay: -0.5 * x + 's'}
+        },
+        uploadSequence() {
+          let input = document.createElement('input');
+          input.type = 'file';
+          input.addEventListener('change', e => {
+            if (!e.target.files) return;
+            let f = e.target.files.item(0);
+            if (!f.name.endsWith('.fasta')) {
+              this.$message.error('序列文件必须以 .fasta 结尾。');
+              return;
+            }
+            this.dna = new DNAData();
+            this.totalChunk = Math.ceil(f.size / 65536);
+            f.slice(0, 65536).text().then(t => this.fileCallback(f, t));
+          })
+          input.click();
+        },
+        fileCallback(f, text) {
+          this.location++;
+          if (this.location >= this.totalChunk) {
+            this.percentage = 100;
+            this.dna.finish();
+            this.loaded = true;
+            return;
+          }
+          this.dna.feed(text);
+          this.percentage = Math.round(this.location / this.totalChunk * 100);
+          f.slice(this.location * 65536, (this.location+1) * 65536).text().then(t => this.fileCallback(f, t));
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
