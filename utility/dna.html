@@ -126,6 +126,32 @@
         transform: scale(1);
       }
     }
+
+    .dna-a {
+      background-color: #409EFF;
+    }
+
+    .dna-t {
+      background-color: #67C23A;
+    }
+
+    .dna-c {
+      background-color: #E6A23C;
+    }
+
+    .dna-g {
+      background-color: #F56C6C;
+    }
+
+    .dna-viewer {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .dna-viewer > div {
+      flex-grow: 1;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
@@ -163,9 +189,16 @@
               <p>C/G 比: {{(dna.cgRatio * 100).toPrecision(4)}}%</p>
               <p>蛋白质数量: {{dna.proteinsCount}}</p>
             </div>
-          </div>
-          <div id='igv-div' class='mg-sm-top' :style='{ display: loaded ? "block" : "none" }'>
-            
+            <div class='mg-sm-top'>
+              <el-pagination
+                layout="prev, pager, next"
+                :total="sliceCount"
+                @current-change='pageChange'>
+              </el-pagination>
+              <div class='dna-viewer mg-sm-top'>
+                <div v-for='base in displaying' :class='dnaClassOf(base)'>{{base}}</div>
+              </div>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -203,15 +236,18 @@
         this.basesCount = {
           a: 0, t: 0, c: 0, g: 0, u: 0
         }
+        this.headerLength = 0;
       }
       feed(data) {
         if (this._first) {
           this._first = false;
           let line = data.split('\n')[0].substr(1);
+          this.headerLength = line.length + 2;
           data = data.split('\n').slice(1).join(' ');
           this.id = line.split(' ')[0];
           this.name = line.split(' ').slice(1).join(' ');
         }
+        while (data.includes("\n")) data = data.replace("\n", "");
         this.total += data.length;
         for (let base in this.basesCount)
           this.basesCount[base] += count(data, base.toUpperCase());
@@ -238,7 +274,9 @@
         percentage: 0,
         location: 0,
         totalChunk: 0,
-        dna: null
+        dna: null,
+        dnaFile: null,
+        displaying: ""
       },
       methods: {
         back() {
@@ -253,6 +291,7 @@
           input.addEventListener('change', e => {
             if (!e.target.files) return;
             let f = e.target.files.item(0);
+            this.dnaFile = f;
             if (!f.name.endsWith('.fasta')) {
               this.$message.error('序列文件必须以 .fasta 结尾。');
               return;
@@ -269,11 +308,31 @@
             this.percentage = 100;
             this.dna.finish();
             this.loaded = true;
+            this.getDNASlice(0);
             return;
           }
           this.dna.feed(text);
           this.percentage = Math.round(this.location / this.totalChunk * 100);
           f.slice(this.location * 65536, (this.location+1) * 65536).text().then(t => this.fileCallback(f, t));
+        },
+        getDNASlice(n) {
+          let slice = this.dnaFile.slice(this.dna.headerLength + 100*n, this.dna.headerLength + 100*(n+1));
+          slice.text().then(t => {
+            while (t.includes("\n")) t = t.replace("\n", "");
+            this.displaying = t.split("");
+          })
+        },
+        dnaClassOf(b) {
+          return 'dna-' + b.toLowerCase();
+        },
+        pageChange(x) {
+          this.getDNASlice(x-1);
+        }
+      },
+      computed: {
+        sliceCount() {
+          if (!this.dnaFile || !this.dna) return 0;
+          return Math.ceil((this.dnaFile.size - this.dna.headerLength) / 100);
         }
       }
     })
